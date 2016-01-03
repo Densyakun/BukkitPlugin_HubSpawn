@@ -1,1 +1,9 @@
 world: world
+x: 0.5
+y: -2.0
+z: 0.5
+yaw: 0.0
+pitch: 0.0
+joinspawn: true
+firstonly: true
+respawn: true
