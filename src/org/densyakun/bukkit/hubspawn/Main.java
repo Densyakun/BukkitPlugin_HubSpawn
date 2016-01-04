@@ -20,7 +20,6 @@ public class Main extends JavaPlugin implements Listener{
 		firstonly = getConfig().getBoolean("firstonly", true);
 		World lobby = getServer().getWorld(getConfig().getString("world", "world"));
 		if (lobby != null) {
-			lobby.setMonsterSpawnLimit(0);
 			getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[" + getName() + "] SpawnLocation: " + (lobbyspawn = new Location(lobby, getConfig().getDouble("x", 0.5), getConfig().getDouble("y", -2), getConfig().getDouble("z", 0.5), (float) getConfig().getDouble("yaw", 0), (float) getConfig().getDouble("pitch", 0))).toString());
 			lobby.setSpawnLocation(lobbyspawn.getBlockX(), lobbyspawn.getBlockY(), lobbyspawn.getBlockZ());
 		} else {
