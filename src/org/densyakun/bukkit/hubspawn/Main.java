@@ -52,6 +52,7 @@ public class Main extends JavaPlugin implements Listener{
 			getConfig().set("yaw", lobbyspawn.getYaw());
 			getConfig().set("pitch", lobbyspawn.getPitch());
 		}
+		saveConfig();
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
