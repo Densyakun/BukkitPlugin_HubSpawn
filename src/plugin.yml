@@ -1,6 +1,6 @@
 name: HubSpawn
 main: org.densyakun.bukkit.hubspawn.Main
-version: 1.5
+version: 1.5.1
 author: Densyakun.
 website: http://densyakuncreate.wiki.fc2.com/
 commands:
