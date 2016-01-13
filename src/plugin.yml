@@ -1,9 +1,9 @@
 name: HubSpawn
 main: org.densyakun.bukkit.hubspawn.Main
-version: 1.5.1
+version: 1.5.2
 author: Densyakun.
 website: http://densyakuncreate.wiki.fc2.com/
 commands:
-spawn:
-hub:
-setspawn:
+   spawn:
+   hub:
+   setspawn:
