@@ -16,6 +16,8 @@ public class Main extends JavaPlugin implements Listener{
 	public boolean firstonly = true;
 	public boolean respawn = true;
 	public boolean worldsetspawn = true;
+	public boolean respawntobed = true;
+	public boolean bedteleported = true;
 	public void onEnable(){
 		load();
 		save();
@@ -28,6 +30,8 @@ public class Main extends JavaPlugin implements Listener{
 		firstonly = getConfig().getBoolean("firstonly", true);
 		respawn = getConfig().getBoolean("respawn", true);
 		worldsetspawn = getConfig().getBoolean("worldsetspawn", true);
+		respawntobed = getConfig().getBoolean("respawntobed", true);
+		bedteleported = getConfig().getBoolean("bedteleported", true);
 		World lobby = getServer().getWorld(getConfig().getString("world", "world"));
 		if (lobby != null) {
 			getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[" + getName() + "] SpawnLocation: " + (lobbyspawn = new Location(lobby, getConfig().getDouble("x", 0.5), getConfig().getDouble("y", -2), getConfig().getDouble("z", 0.5), (float) getConfig().getDouble("yaw", 0), (float) getConfig().getDouble("pitch", 0))).toString());
@@ -44,6 +48,8 @@ public class Main extends JavaPlugin implements Listener{
 		getConfig().set("firstonly", firstonly);
 		getConfig().set("respawn", respawn);
 		getConfig().set("worldsetspawn", worldsetspawn);
+		getConfig().set("respawntobed", respawntobed);
+		getConfig().set("bedteleported", bedteleported);
 		if (lobbyspawn != null) {
 			getConfig().set("world", lobbyspawn.getWorld().getName());
 			getConfig().set("x", lobbyspawn.getX());
@@ -92,6 +98,17 @@ public class Main extends JavaPlugin implements Listener{
 				save();
 				load();
 				sender.sendMessage(ChatColor.GREEN + "[" + getName() + "] " + ChatColor.AQUA + "スポーンを設定しました: " + lobbyspawn);
+			} else if (command.getName().equalsIgnoreCase("bed")) {
+				if (bedteleported) {
+					if (((Player) sender).getBedSpawnLocation() != null) {
+						((Player) sender).teleport(((Player) sender).getBedSpawnLocation());
+						sender.sendMessage(ChatColor.GREEN + "[" + getName() + "] " + ChatColor.AQUA + "自分のベッドにスポーンしました");
+					} else {
+						sender.sendMessage(ChatColor.GREEN + "[" + getName() + "] " + ChatColor.RED + "自分のベッドがありません");
+					}
+				} else {
+					sender.sendMessage(ChatColor.GREEN + "[" + getName() + "] " + ChatColor.RED + "このコマンドは実行できません");
+				}
 			}
 		}
 		return true;
@@ -110,7 +127,7 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	@EventHandler
 	public void PlayerRespawn(PlayerRespawnEvent e) {
-		if ((lobbyspawn != null) && respawn) {
+		if ((lobbyspawn != null) && respawn && (e.getPlayer().getBedSpawnLocation() != null ? !respawntobed : true)) {
 			e.setRespawnLocation(lobbyspawn);
 		}
 	}

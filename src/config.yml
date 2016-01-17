@@ -8,3 +8,5 @@ joinspawn: true
 firstonly: true
 respawn: true
 worldsetspawn: true
+respawntobed: true
+bedteleported: true

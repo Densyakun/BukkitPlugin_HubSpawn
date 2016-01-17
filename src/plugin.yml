@@ -1,9 +1,10 @@
 name: HubSpawn
 main: org.densyakun.bukkit.hubspawn.Main
-version: 1.5.2
+version: 1.6
 author: Densyakun.
 website: http://densyakuncreate.wiki.fc2.com/
 commands:
    spawn:
    hub:
    setspawn:
+   bed:
