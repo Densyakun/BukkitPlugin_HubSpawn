@@ -234,7 +234,7 @@ public class Main extends JavaPlugin implements Listener{
 						String name = 1 <= args.length ? args[0] : "";
 						if ((name.indexOf(',') == -1) && (name.indexOf('[') == -1) && (name.indexOf(']') == -1)) {
 							if (getHome(((Player) sender).getUniqueId(), name) == null ? homemax <= 0 || getHomes(((Player) sender).getUniqueId()).size() < homemax : true) {
-								if (sethome((Player) sender, name)) {
+								if (sethome((Player) sender, name, sethomecost)) {
 									sender.sendMessage(msg_prefix + ChatColor.AQUA + "ホーム" + (name.isEmpty() ? "" : "\"" + name + "\"") + "を設定しました");
 								} else {
 									sender.sendMessage(msg_prefix + ChatColor.RED + "ホームを設定できません");
@@ -378,16 +378,16 @@ public class Main extends JavaPlugin implements Listener{
 		return false;
 	}
 	/**Ver 1.7~*/
-	public boolean sethome(Player player, String name) {
+	public boolean sethome(Player player, String name, double cost) {
 		if (!issethomeban(player.getUniqueId())) {
 			boolean a = true;
-			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= sethomecost) {
+			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= cost) {
 				Holdings holdings = new Account(player.getName()).getHoldings();
-				if (sethomecost <= holdings.getBalance().doubleValue()) {
-					holdings.subtract(sethomecost);
+				if (cost <= holdings.getBalance().doubleValue()) {
+					holdings.subtract(cost);
 					iConomy.Template.set(Template.Node.PLAYER_DEBIT);
 					iConomy.Template.add("name", player.getName());
-					iConomy.Template.add("amount", iConomy.format(sethomecost));
+					iConomy.Template.add("amount", iConomy.format(cost));
 				} else {
 					iConomy.Template.set(Template.Node.ERROR_FUNDS);
 					a = false;
