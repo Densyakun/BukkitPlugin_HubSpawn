@@ -162,7 +162,7 @@ public class Main extends JavaPlugin implements Listener{
 					load();
 					sender.sendMessage(msg_prefix + ChatColor.AQUA + "reloaded.");
 				} else {
-					sender.sendMessage(msg_prefix + (spawned ? (spawn((Player) sender) ? ChatColor.AQUA + "スポーンしました" : ChatColor.RED + "スポーンできません") : msg_cmddisable));
+					sender.sendMessage(msg_prefix + (spawned ? (spawn((Player) sender, spawncost) ? ChatColor.AQUA + "スポーンしました" : ChatColor.RED + "スポーンできません") : msg_cmddisable));
 				}
 			} else if (label.equalsIgnoreCase("setspawn") && sender.isOp()) {
 				if (3 <= args.length) {
@@ -199,7 +199,7 @@ public class Main extends JavaPlugin implements Listener{
 			} else if (label.equalsIgnoreCase("bed")) {
 				if (bedteleported) {
 					if (((Player) sender).getBedSpawnLocation() != null) {
-						if (bed((Player) sender)) {
+						if (bed((Player) sender, bedcost)) {
 							sender.sendMessage(msg_prefix + ChatColor.AQUA + "自分のベッドに移動しました");
 						} else {
 							sender.sendMessage(msg_prefix + ChatColor.RED + "自分のベッドに移動できません");
@@ -215,7 +215,7 @@ public class Main extends JavaPlugin implements Listener{
 					String name = 0 < args.length ? args[0] : "";
 					Home a = getHome(((Player) sender).getUniqueId(), name);
 					if (a != null) {
-						if (home((Player) sender, a)) {
+						if (home((Player) sender, a, homecost)) {
 							sender.sendMessage(msg_prefix + ChatColor.AQUA + "ホーム" + (a.getName().isEmpty() ? "" : "\"" + a.getName() + "\"") + "に移動しました");
 						} else {
 							sender.sendMessage(msg_prefix + ChatColor.RED + "ホーム" + (a.getName().isEmpty() ? "" : "\"" + a.getName() + "\"") + "に移動できません");
@@ -299,16 +299,17 @@ public class Main extends JavaPlugin implements Listener{
 		}
 		return true;
 	}
-	public boolean spawn(Player player) {
+	/**Ver 1.7~*/
+	public boolean spawn(Player player, double cost) {
 		if (!isspawnban(player.getUniqueId())) {
 			boolean a = true;
-			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= spawncost) {
+			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= cost) {
 				Holdings holdings = new Account(player.getName()).getHoldings();
-				if (spawncost <= holdings.getBalance().doubleValue()) {
-					holdings.subtract(spawncost);
+				if (cost <= holdings.getBalance().doubleValue()) {
+					holdings.subtract(cost);
 					iConomy.Template.set(Template.Node.PLAYER_DEBIT);
 					iConomy.Template.add("name", player.getName());
-					iConomy.Template.add("amount", iConomy.format(spawncost));
+					iConomy.Template.add("amount", iConomy.format(cost));
 				} else {
 					iConomy.Template.set(Template.Node.ERROR_FUNDS);
 					a = false;
@@ -325,16 +326,16 @@ public class Main extends JavaPlugin implements Listener{
 		return false;
 	}
 	/**Ver 1.7~*/
-	public boolean bed(Player player) {
+	public boolean bed(Player player, double cost) {
 		if (!isbedban(player.getUniqueId()) && player.getBedSpawnLocation() != null) {
 			boolean a = true;
-			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= bedcost) {
+			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= cost) {
 				Holdings holdings = new Account(player.getName()).getHoldings();
-				if (bedcost <= holdings.getBalance().doubleValue()) {
-					holdings.subtract(bedcost);
+				if (cost <= holdings.getBalance().doubleValue()) {
+					holdings.subtract(cost);
 					iConomy.Template.set(Template.Node.PLAYER_DEBIT);
 					iConomy.Template.add("name", player.getName());
-					iConomy.Template.add("amount", iConomy.format(bedcost));
+					iConomy.Template.add("amount", iConomy.format(cost));
 				} else {
 					iConomy.Template.set(Template.Node.ERROR_FUNDS);
 					a = false;
@@ -351,16 +352,16 @@ public class Main extends JavaPlugin implements Listener{
 		return false;
 	}
 	/**Ver 1.7~*/
-	public boolean home(Player player, Home home) {
+	public boolean home(Player player, Home home, double cost) {
 		if (!ishomeban(player.getUniqueId())) {
 			boolean a = true;
-			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= homecost) {
+			if (getServer().getPluginManager().getPlugin("iConomy") != null && 0.1 <= cost) {
 				Holdings holdings = new Account(player.getName()).getHoldings();
-				if (homecost <= holdings.getBalance().doubleValue()) {
-					holdings.subtract(homecost);
+				if (cost <= holdings.getBalance().doubleValue()) {
+					holdings.subtract(cost);
 					iConomy.Template.set(Template.Node.PLAYER_DEBIT);
 					iConomy.Template.add("name", player.getName());
-					iConomy.Template.add("amount", iConomy.format(homecost));
+					iConomy.Template.add("amount", iConomy.format(cost));
 				} else {
 					iConomy.Template.set(Template.Node.ERROR_FUNDS);
 					a = false;
@@ -538,7 +539,7 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void PlayerJoin(PlayerJoinEvent e) {
 		if (joinspawn && ((e.getPlayer().getLastPlayed() == 0) || !firstonly)) {
-			spawn(e.getPlayer());
+			spawn(e.getPlayer(), 0);
 		}
 	}
 	@EventHandler
