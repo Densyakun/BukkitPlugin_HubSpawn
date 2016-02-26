@@ -10,3 +10,10 @@ respawn: true
 worldsetspawn: true
 respawntobed: true
 bedteleported: true
+spawned: true
+spawncost: 0.0
+bedcost: 0.0
+homecost: 0.0
+sethomecost: 0.0
+home: true
+homemax: 0
